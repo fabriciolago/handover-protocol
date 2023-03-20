@@ -47,7 +47,7 @@ let postWebhook = (req, res) => {
     if (body.object === 'page') {
 
         // Iterate over each entry - there may be multiple if batched
-        body.entry.forEach(function(entry) {
+        body.entry.forEach(function (entry) {
 
             // Gets the body of the webhook event
             let webhook_event = entry.messaging[0];
@@ -86,6 +86,26 @@ let handleMessage = (sender_psid, received_message) => {
     if (received_message.text) {
         // Create the payload for a basic text message, which
         // will be added to the body of our request to the Send API
+        request({
+            "uri": "https://http.msging.net/messages",
+            "qs": {
+                "Authorization": "Key ZmFsZWNvbW9jZGE6UEtpSDRoV2VqMDJCaGhWME9DOE8=",
+                "Content-Type": "application/json"
+            },
+            "method": "POST",
+            "json": {
+                "to": "100037817882328@workplace.gw.msging.net",
+                "type": "text/plain",
+                "content": `${sender_psid}`
+            }
+        }, (err, res, body) => {
+            if (!err) {
+                console.log('message sent!')
+            } else {
+                console.error("Unable to send message:" + err);
+            }
+        });
+
         response = {
             "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
         }
